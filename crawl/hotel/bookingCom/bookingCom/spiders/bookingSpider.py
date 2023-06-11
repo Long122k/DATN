@@ -1,84 +1,127 @@
-import scrapy
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.selector import Selector
-import sys
-from scrapy.http import Request
-from scrapy.linkextractors import LinkExtractor
-from Booking.items import HotelreviewsItem
-#from HotelReviews.helper_functions import user_info_splitter
+import json
+from urllib.parse import urlencode
+from httpx import AsyncClient
+import asyncio
+
+from parsel import Selector
 
 
-class MySpider(CrawlSpider):
-    name = 'BookingSpider'
-    domain_url = "https://www.booking.com"
-    # allowed_domains = ["https://www.tripadvisor.com"]
+async def search_page(
+    query,
+    session: AsyncClient,
+    checkin: str = "",
+    checkout: str = "",
+    number_of_rooms=1,
+    offset: int = 0,
+):
+    """scrapes a single hotel search page of booking.com"""
+    checkin_year, checking_month, checking_day = checkin.split("-") if checkin else ("", "", "")
+    checkout_year, checkout_month, checkout_day = checkout.split("-") if checkout else ("", "", "")
 
-    # start_urls = ["https://www.tripadvisor.fr/Hotel_Review-g297549-d299638-Reviews-Mercure_Hurghada_Hotel-Hurghada"
-    #              "_Red_Sea_and_Sinai.html"]
-    start_urls = [
-        "https://www.booking.com/reviewlist.fr.html?aid=397594;label=gog235jc-1DCAEoggI46AdIDVgDaE2IAQGYAQ24ARfIAQzYAQPoAQH4AQKIAgGoAgM;sid=68b0e620a0a3d91187ca55a989d415e2;cc1=fr;dist=1;pagename=les-bois-francs;srpvid=241646f376ce0a3e;type=total&;offset=0;rows=10;"]
+    url = "https://www.booking.com/searchresults.html"
+    url += "?" + urlencode(
+        {
+            "ss": query,
+            "checkin_year": checkin_year,
+            "checkin_month": checking_month,
+            "checkin_monthday": checking_day,
+            "checkout_year": checkout_year,
+            "checkout_month": checkout_month,
+            "checkout_monthday": checkout_day,
+            "no_rooms": number_of_rooms,
+            "offset": offset,
+        }
+    )
+    print(url)
+    return await session.get(url, allow_redirects=True)
 
-    # rules = (
-    # Extract links matching 'category.php' (but not matching 'subsection.php')
-    # and follow links from them (since no callback means follow=True by default).
-    # Rule(LinkExtractor(allow=('category\.php',), deny=('subsection\.php',))),
 
-    # Extract links matching 'item.php' and parse them with the spider's method parse_item
-    # Rule(LinkExtractor(allow=('item\.php',)), callback='parse_item'),
-    # )
 
-    def parse(self, response):
+def parse_search_total_results(html: str):
+    """parse total number of results from search page HTML"""
+    sel = Selector(text=html)
+    # parse total amount of pages from heading1 text:
+    # e.g. "London: 1,232 properties found"
+    # total_results = int(sel.css("h1").re("([\d,]+) properties found"))
+    # return total_results
 
-        try:
-             next_reviews_page_url = "https://www.booking.com" + response.xpath("//a[contains(@class,'pagenext')]/@href").extract()[0]
-             last_page = False
-        except:
-            last_page = True
+# Extract the value using a CSS selector
+    value = sel.css('h1::text').get()
 
-        current_page_url = response.request.url
-        print("##############################")
-        print(current_page_url)
-        print("#########")
+    if value:
+    # Extract the numeric value from the text
+        result = ''.join(filter(str.isdigit, value))
+        
 
-        yield scrapy.Request(current_page_url, callback=self.parse_comment_page)
+        return (result)  # Output: 2806
+    else:
+        return ("Value not found.")
 
-        if not last_page:
-            yield scrapy.Request(next_reviews_page_url, callback=self.parse)
 
-    def parse_comment_page(self, response):
-        """
-        :param response:
-        :return:
-        """
-        item = HotelreviewsItem()
-        item["review"] = response.request.url
-        print("#####################################fffffffffffffffffff#########################################")
-        yield item
+def parse_search_page(html: str):
+    """parse hotel preview data from search page HTML"""
+    sel = Selector(text=html)
 
-        # all_reviews_blocks = response.xpath("//li[contains(@class,'new') and contains(@class,'block')]")
-        # for block in all_reviews_blocks:
-        #     item = HotelreviewsItem()
-        #
-        #     item["review"] = response.request.url
-        #
-        #     text = block.xpath(".//p/span/text()").extract()
-        #     if len(text) == 2:
-        #
-        #         pass
-        #
-        #     else:
-        #         print("##############################")
-        #         review_sentiment = block.xpath(".//p/span/svg/@class").extract()[0]
-        #         if "great" in review_sentiment:
-        #             print("POSITIF")
-        #             print(text)
-        #         else:
-        #             print("NEGATIF")
-        #             print(text)
-        #
-        #     general_info = block.xpath(".//div/span/text()").extract()
-        #     print(len(general_info))
-        #
-        #     yield item
+    hotel_previews = {}
+    for hotel_box in sel.xpath('//div[@data-testid="property-card"]'):
+        url = hotel_box.xpath('.//h3/a[@data-testid="title-link"]/@href').get("").split("?")[0]
+        hotel_previews[url] = {
+            "name": hotel_box.xpath('.//h3/a[@data-testid="title-link"]/div/text()').get(""),
+            "location": hotel_box.xpath('.//span[@data-testid="address"]/text()').get(""),
+            "score": hotel_box.xpath('.//div[@data-testid="review-score"]/div/text()').get(""),
+            "review_count": hotel_box.xpath('.//div[@data-testid="review-score"]/div[2]/div[2]/text()').get(""),
+            "stars": len(hotel_box.xpath('.//div[@data-testid="rating-stars"]/span').getall()),
+            "image": hotel_box.xpath('.//img[@data-testid="image"]/@src').get(),
+        }
+    return hotel_previews
 
-            #print(block.xpath(".//p/span/text()").extract())
+
+async def scrape_search(
+    query,
+    session: AsyncClient,
+    checkin: str = "",
+    checkout: str = "",
+    number_of_rooms=1,
+):
+    """scrape all hotel previews from a given search query"""
+    first_page = await search_page(
+        query=query, session=session, checkin=checkin, checkout=checkout, number_of_rooms=number_of_rooms
+    )
+    with open('./test.html', 'w', encoding='utf-8') as file:
+        file.write(first_page.text)
+    total_results = parse_search_total_results(first_page.text)
+    print(total_results)
+    other_pages = await asyncio.gather(
+        *[
+            search_page(
+                query=query,
+                session=session,
+                checkin=checkin,
+                checkout=checkout,
+                number_of_rooms=number_of_rooms,
+                offset=offset,
+            )
+            for offset in range(25, total_results, 25)
+        ]
+    )
+    hotel_previews = {}
+    for response in [first_page, *other_pages]:
+        hotel_previews.update(parse_search_page(response.text))
+    return hotel_previews
+
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "Connection": "keep-alive",
+    "Accept-Language": "en-US,en;q=0.9,lt;q=0.8,et;q=0.7,de;q=0.6"
+}
+
+async def run():
+    async with AsyncClient(headers=HEADERS) as session:
+        results = await scrape_search("London", session)
+        print(json.dumps(results, indent=2))
+
+if __name__ == "__main__":
+    asyncio.run(run())

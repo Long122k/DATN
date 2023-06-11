@@ -4,20 +4,11 @@ import asyncio
 
 # Function to translate city names to English
 async def translate_city_name(session, city_name):
-    custom_mapping = {
-        "Thái Bình": "Thai Binh",
-        "El M'ghair": "El M'ghair",
-        # Add more custom mappings as needed
-    }
+    async with session.get(f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q={city_name}") as response:
+        translation = await response.json()
+        translated_city_name = translation[0][0][0]
 
-    if city_name in custom_mapping:
-        return custom_mapping[city_name]
-    else:
-        async with session.get(f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q={city_name}") as response:
-            translation = await response.json()
-            translated_city_name = translation[0][0][0]
-
-            return translated_city_name
+        return translated_city_name
 
 # Path to the CSV file
 csv_file = '/home/dolong/Documents/Code/DATN/crawl/states.csv'

@@ -1,4 +1,4 @@
-# Scrapy settings for bookingCom project
+# Scrapy settings for tripAdvisor project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,19 +7,17 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "bookingCom"
+BOT_NAME = "tripAdvisor"
 
-SPIDER_MODULES = ["bookingCom.spiders"]
-NEWSPIDER_MODULE = "bookingCom.spiders"
-
+SPIDER_MODULES = ["tripAdvisor.spiders"]
+NEWSPIDER_MODULE = "tripAdvisor.spiders"
+CHROME_DRIVER = "/home/dolong/Documents/chromedriver_linux64/chromedriver"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "bookingCom (+http://www.yourdomain.com)"
-# USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
-
+#USER_AGENT = "tripAdvisor (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -39,26 +37,26 @@ ROBOTSTXT_OBEY = True
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-# DEFAULT_REQUEST_HEADERS = {
+DEFAULT_REQUEST_HEADERS = {
 
-#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
-#     "Accept-Encoding": "gzip, deflate, br",
-#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-#     "Connection": "keep-alive",
-#     "Accept-Language": "en-US,en;q=0.9,lt;q=0.8,et;q=0.7,de;q=0.6",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "Connection": "keep-alive",
+    "Accept-Language": "en-US,en;q=0.9,lt;q=0.8,et;q=0.7,de;q=0.6",
 
-# }
+}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "bookingCom.middlewares.BookingcomSpiderMiddleware": 543,
+#    "tripAdvisor.middlewares.TripadvisorSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "bookingCom.middlewares.BookingcomDownloaderMiddleware": 543,
+#    "tripAdvisor.middlewares.TripadvisorDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -70,7 +68,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "bookingCom.pipelines.BookingcomPipeline": 300,
+#    "tripAdvisor.pipelines.TripadvisorPipeline": 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
