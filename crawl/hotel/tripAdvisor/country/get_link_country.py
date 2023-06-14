@@ -24,15 +24,12 @@ with open('crawl/country.csv', 'r') as file:
     list_links = []
     for row in reader:
         country_name = row[0]
-# Replace the country name in the link
+        # Replace the country name in the link
         modified_link = "https://www.tripadvisor.com/Search?q=" + country_name.lower()
 
         driver.get(modified_link)
-        # wait = WebDriverWait(driver, 5)
-        # wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'result-inner-columns-wrapper')))             
-        # time.sleep(5)
         try:
-# Get the link to the hotels in each country
+            # Get the link to the hotels in each country
             content = driver.find_element(By.CSS_SELECTOR, "div[class*='ui_columns is-mobile result-content-columns'").get_attribute('onclick')
             start_index = content.find("'/") + 2
             end_index = content.find("'", start_index)
@@ -44,9 +41,9 @@ with open('crawl/country.csv', 'r') as file:
                 list_links.append(result)
         except:
             pass
-# Quit the driver and close the browser
+    # Quit the driver and close the browser
     driver.quit()
-#Write to csv file
+    #Write to csv file
     with open('crawl/hotel/tripAdvisor/country/link_country.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         for link in list_links:

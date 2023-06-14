@@ -11,14 +11,21 @@ import scrapy
 #     # name = scrapy.Field()
 #     hotel_url = scrapy.Field()
 #     hotel_name = scrapy.Field()
-#     total_reviews = scrapy.Field()
-#     address = scrapy.Field()
-#     rating = scrapy.Field()
-    
+#     total_hotel_reviews = scrapy.Field()
+#     hotel_address = scrapy.Field()
+#     reviewer_rating = scrapy.Field()
+#     reviewer_contribution = scrapy.Field()
+#     reviewer_helpful_vote = scrapy.Field()
+#     reviewer_title_comment = scrapy.Field()
+#     reviewer_comment = scrapy.Field()
+#     reviewer_stay_date = scrapy.Field()
+#     reviewer_trip_type = scrapy.Field()
 
 
     # pass
 
 class HotelItem(scrapy.Item):
     hotel_url = scrapy.Field()
+    hotel_id = scrapy.Field()
+    # city_id = scrapy.Field()
     pass
