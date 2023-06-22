@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  redis_queue:
+    image: redis:6.2
+    restart: unless-stopped
+    # env_file: ./.env
+    # environment:
+    #   - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+    #   - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      # - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+        - "6379:6379"
+    # volumes:
+    #   - db:/var/lib/mysql
+    #   - ./db:/tmp/test
+    hostname: redis_queue
+    networks:
+      - crawl
+
+  # hotel_link:
+  #   build: ./crawl/hotel/hotel_link
+  #   hostname: hotel_link
+  #   networks:
+  #     - crawl
+
+networks:
+  crawl:
