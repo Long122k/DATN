@@ -1,22 +1,6 @@
 version: "3.8"
 
 services:
-  redis_queue:
-    image: redis:6.2
-    restart: unless-stopped
-    # env_file: ./.env
-    # environment:
-    #   - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-    #   - MYSQL_DATABASE=$MYSQLDB_DATABASE
-    ports:
-      # - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-        - "6379:6379"
-    # volumes:
-    #   - db:/var/lib/mysql
-    #   - ./db:/tmp/test
-    hostname: redis_queue
-    networks:
-      - crawl
 
   # hotel_link:
   #   build: ./crawl/hotel/hotel_link
@@ -24,5 +8,102 @@ services:
   #   networks:
   #     - crawl
 
+  # redis_queue:
+  #   image: redis:6.2
+  #   restart: unless-stopped
+  #   ports:
+  #       - "6379:6379"
+  #   hostname: redis_queue
+  #   networks:
+  #     - crawl
+
+
+  # crawler1:
+  #   build: ./crawl/hotel/hotel_data
+  #   hostname: crawler1
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'
+  #         memory: 2G
+  #   memswap_limit: 4G
+  #   networks:
+  #     - crawl
+
+  # crawler2:
+  #   build: ./crawl/hotel/hotel_data
+  #   hostname: crawler2
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'
+  #         memory: 2G
+  #   memswap_limit: 4G
+  #   shm_size: '2gb'
+  #   networks:
+  #     - crawl
+
+
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper
+  #   hostname: zookeeper
+  #   ports:
+  #     - "2181:2181"
+  #   # restart: always
+  #   environment:
+  #     - ZOOKEEPER_CLIENT_PORT=2181
+  #     # - ZOOKEEPER_SECURE_CLIENT_PORT=2888
+  #     - ZOOKEEPER_SSL_ENABLED=false
+  #   networks:
+  #     - crawl
+
+  # kafka:
+  #   image: confluentinc/cp-kafka
+  #   restart: always
+  #   depends_on:
+  #     - zookeeper
+  #   hostname: kafka
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+  #     - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  #   volumes:
+  #     - ./process/kafka/server.properties:/etc/kafka/server.properties
+  #   networks:
+  #     - crawl
+    
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
+    hostname: zookeeper
+    # volumes:
+    #   - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - crawl
+
+  kafka:
+    image: bitnami/kafka:3.4
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    # volumes:
+    #   - "kafka_data:/bitnami"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=no
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9092
+    depends_on:
+      - zookeeper
+    # volumes:
+    #   - ./process/kafka/server.properties:/opt/bitnami/kafka/server.properties
+    networks:
+      - crawl
+
+      
 networks:
   crawl:

@@ -8,8 +8,6 @@ WORKDIR /hotel_link
 COPY . .
 
 # Install any required dependencies
-# If you have a requirements.txt file, uncomment the following line
-# COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
 # Set the entry point command to run your Python script

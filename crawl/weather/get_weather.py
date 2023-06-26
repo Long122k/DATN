@@ -7,8 +7,8 @@ import time
 # API endpoint
 url = "https://archive-api.open-meteo.com/v1/archive"
 
-input_file = "/home/long/Documents/new_state.csv"
-output_file_name = "/home/long/Documents/weather1.json"
+input_file = "./crawl/city.csv"
+output_file_name = "./crawl/weather1.json"
 
 # Read parameter values from the CSV file
 parameters = []
@@ -48,6 +48,7 @@ with open(output_file_name, "w") as output_file:
         list_data[i] = data
         i = i+1
         print(i)
+        break
         # time.sleep(2)
     session.close()
     # Write the data to a CSV file
