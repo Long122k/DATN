@@ -15,21 +15,29 @@ class get_hotel(scrapy.Spider):
     allow_domain = ['tripadvisor.com']
     domain = 'https://www.tripadvisor.com/'
     links = []
-    with open('./country/link_city.csv', 'r') as file:
-        csv_reader = csv.reader(file)
-        next(csv_reader)  # Skip the first row
-        for row in csv_reader:
-            link = domain + row[3]
-            links.append(link)
-    start_urls = links
+
+    def start_requests(self):
+        with open('../country/link_city.csv', 'r') as file:
+            csv_reader = csv.reader(file)
+            for _ in range(3376):  # Skip the rows until row 1669
+                next(csv_reader)
+            # next(csv_reader)  # Skip the first row
+            for row in csv_reader:
+                url = self.domain + row[3]
+                city = row[1]
+                country = row[2]
+                yield scrapy.Request(url, self.parse, meta={'arg1': city, 'arg2': country})
 
     def parse(self, response):
         setting = get_project_settings()
         driver_path = setting['CHROME_DRIVER']
         options = webdriver.ChromeOptions()
-        options.page_load_strategy = 'none'
         options.add_argument('disable-popup-blocking')
-        options.add_argument("--headless")  # Run Chrome in headless mode (without GUI)
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--blink-settings=imagesEnabled=false')
         driver = webdriver.Chrome(driver_path, options=options)
         driver.get(response.url)
         driver.implicitly_wait(30)
@@ -48,6 +56,8 @@ class get_hotel(scrapy.Spider):
             item = HotelItem()
             item['hotel_url'] = href
             item['hotel_id'] = href.split('-')[2]
+            item['city'] = response.meta['arg1']
+            item['country'] = response.meta['arg2']
             yield item
 
         driver.quit()

@@ -7,7 +7,7 @@ import scrapy
 
 
 class hotel_dataItem(scrapy.Item):
-    # hotel_url = scrapy.Field()
+    hotel_url = scrapy.Field()
     hotel_name = scrapy.Field()
     total_hotel_reviews = scrapy.Field()
     star = scrapy.Field()

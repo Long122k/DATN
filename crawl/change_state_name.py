@@ -8,8 +8,8 @@ def translate_city_name(city_name):
     return translation.text
 
 #Path to the CSV file
-csv_file = '/home/dolong/Documents/Code/DATN/crawl/states.csv'
-new_states = '/home/dolong/Documents/Code/DATN/crawl/new_states.csv'
+csv_file = '/home/dolong/Documents/Code/DATN/process/spark/world-cities.csv'
+new_states = '/home/dolong/Documents/Code/DATN/process/spark/new_states.csv'
 
 # Read the CSV file
 with open(csv_file, 'r', encoding='utf-8') as file:

@@ -1,21 +1,3 @@
-# Use an appropriate base image with Python installed
-# FROM python:3.8
-
-
-# # Set the working directory in the container
-# WORKDIR /hotel_data
-
-# # Copy the contents of the tripAdvisor folder to the working directory in the container
-# COPY . .
-
-# # Install any required dependencies
-# RUN pip install -r requirements.txt
-# # RUN apt-get update -y && apt-get install -y libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1
-# RUN apt-get update \
-#     && apt-get install -y chromium
-
-# # Set the entry point command to run your Python script
-# CMD ["tail", "-f", "/dev/null"]
 # # ENTRYPOINT [ "scrapy", "crawl", "hotel_info", "-o", "data2.json" ]
 # Base image
 FROM ubuntu:20.04

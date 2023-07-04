@@ -9,5 +9,7 @@ import scrapy
 class HotelItem(scrapy.Item):
     hotel_url = scrapy.Field()
     hotel_id = scrapy.Field()
+    city = scrapy.Field()
+    country = scrapy.Field()
     # city_id = scrapy.Field()
     pass

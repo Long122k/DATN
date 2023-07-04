@@ -11,7 +11,7 @@ BOT_NAME = "tripAdvisor"
 
 SPIDER_MODULES = ["tripAdvisor.spiders"]
 NEWSPIDER_MODULE = "tripAdvisor.spiders"
-CHROME_DRIVER = "./chromedriver"
+CHROME_DRIVER = "../chromedriver"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "tripAdvisor (+http://www.yourdomain.com)"

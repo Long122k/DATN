@@ -1,4 +1,5 @@
 import time
+import json
 from datetime import datetime, timedelta
 from scrapy import Selector
 from selenium import webdriver
@@ -9,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from ..items import hotel_dataItem
 from scrapy_redis.spiders import RedisSpider
 from selenium.webdriver.chrome.service import Service
+from kafka import KafkaProducer
 
 
 class get_hotel(RedisSpider):
@@ -19,9 +21,9 @@ class get_hotel(RedisSpider):
     # Max idle time(in seconds) before the spider stops checking redis and shuts down
     max_idle_time = 7
 
-#     from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
+    def __init__(self, *args, **kwargs):
+        super(get_hotel, self).__init__(*args, **kwargs)
+        self.producer = KafkaProducer(bootstrap_servers='kafka:9092')
 
     def parse(self, response):
         setting = get_project_settings()
@@ -38,13 +40,13 @@ class get_hotel(RedisSpider):
         driver = webdriver.Chrome(service=service, options=options)
         driver.get(response.url)
         #time for loading expand button
-        time.sleep(0.3)
+        time.sleep(1)
 
         try:
             driver.find_element(By.CLASS_NAME, 'ui_icon.caret-down.Lvqmo').click()
         except:
             pass
-
+        hotel_url = response.url
         hotel_name = driver.find_element(By.ID, 'HEADING').text if driver.find_elements(By.ID, 'HEADING') else 'NA'
         hotel_address = driver.find_element(By.CLASS_NAME, 'oAPmj').text if driver.find_elements(By.CLASS_NAME, 'oAPmj') else 'NA'
         price = driver.find_element(By.CLASS_NAME, 'gbXAQ').text if driver.find_elements(By.CLASS_NAME, 'gbXAQ') else 'NA'
@@ -65,6 +67,7 @@ class get_hotel(RedisSpider):
                 reviewer_comment = element.find_element(By.CLASS_NAME, 'QewHA').text if element.find_elements(By.CLASS_NAME, 'QewHA') else 'NA'
 
                 item = hotel_dataItem()
+                item['hotel_url'] = hotel_url
                 item['hotel_name'] = hotel_name
                 item['total_hotel_reviews'] = total_hotel_reviews
                 item['star'] = star
@@ -80,7 +83,17 @@ class get_hotel(RedisSpider):
                 item['reviewer_trip_type'] = reviewer_trip_type
 
                 yield item
+
+                item_dict = dict(item)
+
+                # Convert the data to a string representation (e.g., JSON)
+                message = json.dumps(item_dict, ensure_ascii=False).encode('utf-8')
+
+                # Send the message to the Kafka topic
+                self.producer.send('hotel_data', value=message)
             else:
                 pass
         driver.quit()
 
+    def closed(self, reason):
+        self.producer.close()
