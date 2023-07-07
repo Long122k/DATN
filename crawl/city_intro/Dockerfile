@@ -44,3 +44,4 @@ RUN pip3 install -r requirements.txt
 # Run the Python command to execute your file
 
 CMD ["tail", "-f", "/dev/null"]
+# CMD ["scrapy", "crawl", "get_intro"]

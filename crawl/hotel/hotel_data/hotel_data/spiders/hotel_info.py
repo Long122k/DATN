@@ -59,11 +59,11 @@ class get_hotel(RedisSpider):
             if review_date.split(' ')[-1] == "Yesterday":
                 review_date = (datetime.now() - timedelta(1)).strftime('%Y-%m-%d')
                 reviewer_link = element.find_element(By.CLASS_NAME, 'ui_header_link').get_attribute('href') if element.find_elements(By.CLASS_NAME, 'ui_header_link') else 'NA'
-                reviewer_rating = element.find_element(By.CLASS_NAME, 'ui_bubble_rating').get_attribute("class").split("_")[-1] if element.find_elements(By.CLASS_NAME, 'ui_bubble_rating') else 'NA'
+                reviewer_rating = element.find_element(By.CLASS_NAME, 'ui_bubble_rating').get_attribute("class") if element.find_elements(By.CLASS_NAME, 'ui_bubble_rating') else 'NA'
                 reviewer_contribution = element.find_element(By.CLASS_NAME, 'yRNgz').text if element.find_elements(By.CLASS_NAME, 'yRNgz') else 'NA'
                 reviewer_title_comment = element.find_element(By.CLASS_NAME, 'Qwuub').text if element.find_elements(By.CLASS_NAME, 'Qwuub') else 'NA'
                 reviewer_stay_date = element.find_element(By.CLASS_NAME, 'teHYY').text if element.find_elements(By.CLASS_NAME, 'teHYY') else 'NA'
-                reviewer_trip_type = element.find_element(By.CLASS_NAME, 'TDKzw').text.split(' ')[-1] if element.find_elements(By.CLASS_NAME, 'TDKzw') else 'NA'
+                reviewer_trip_type = element.find_element(By.CLASS_NAME, 'TDKzw').text if element.find_elements(By.CLASS_NAME, 'TDKzw') else 'NA'
                 reviewer_comment = element.find_element(By.CLASS_NAME, 'QewHA').text if element.find_elements(By.CLASS_NAME, 'QewHA') else 'NA'
 
                 item = hotel_dataItem()

@@ -2,54 +2,77 @@ version: "3.8"
 
 services:
 
-  # hotel_link:
-  #   build: ./crawl/hotel/hotel_link
-  #   hostname: hotel_link
+  
+
+  # city_intro:
+  #   build: ./crawl/city_intro
+  #   hostname: city_intro
   #   networks:
   #     - crawl
 
-  city_intro:
-    build: ./crawl/city_intro
-    hostname: city_intro
+  redis_queue:
+    image: redis:6.2
+    restart: unless-stopped
+    ports:
+        - "6379:6379"
+    hostname: redis_queue
     networks:
       - crawl
 
-  # redis_queue:
-  #   image: redis:6.2
-  #   restart: unless-stopped
-  #   ports:
-  #       - "6379:6379"
-  #   hostname: redis_queue
-  #   networks:
-  #     - crawl
+  hotel_link:
+    build: ./crawl/hotel/hotel_link
+    hostname: hotel_link
+    depends_on:
+      - redis_queue
+    networks:
+      - crawl
 
 
-  # crawler1:
-  #   build: ./crawl/hotel/hotel_data
-  #   hostname: crawler1
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '2'
-  #         memory: 2G
-  #   memswap_limit: 4G
-  #   networks:
-  #     - crawl
+  crawler2:
+    build: ./crawl/hotel/hotel_data
+    hostname: crawler2
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis_queue
+    memswap_limit: 4G
+    shm_size: '2gb'
+    networks:
+      - crawl
 
-  # crawler2:
-  #   build: ./crawl/hotel/hotel_data
-  #   hostname: crawler2
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '2'
-  #         memory: 2G
-  #   memswap_limit: 4G
-  #   shm_size: '2gb'
-  #   networks:
-  #     - crawl
+  crawler3:
+    build: ./crawl/hotel/hotel_data
+    hostname: crawler3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis_queue
+    memswap_limit: 4G
+    shm_size: '2gb'
+    networks:
+      - crawl
 
-    
+  crawler4:
+    build: ./crawl/hotel/hotel_data
+    hostname: crawler1
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis_queue
+    memswap_limit: 4G
+    networks:
+      - crawl
+
+
   # zookeeper:
   #   image: bitnami/zookeeper:3.8
   #   ports:
@@ -82,7 +105,6 @@ services:
   #     - crawl
 
   # spark-master:
-  #   # image: bitnami/spark:3.4
   #   build: ./process/spark
   #   hostname: sparkMaster
   #   environment:
@@ -99,7 +121,6 @@ services:
   #     - crawl
 
   # spark-worker:
-  #   # image: bitnami/spark:3.4
   #   build: ./process/spark
   #   hostname: sparkWorker
   #   environment:
@@ -117,7 +138,7 @@ services:
       - "9042:9042"  # Cassandra client port
     volumes:
       - ./process/cassandra/init.cql:/docker-entrypoint-initdb.d/init.cql
-      - ./data:/bitnami/data  # Persist data to local directory
+      - ./data:/bitnami/cassandra/data  # Persist data to local directory
     networks:
       - crawl
 

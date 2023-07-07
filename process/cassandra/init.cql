@@ -18,19 +18,24 @@ CREATE TABLE IF NOT EXISTS city_intro (
 
 -- Create the table
 CREATE TABLE IF NOT EXISTS hotel_data (
+    hotel_url TEXT,
     hotel_name TEXT,
-    total_hotel_reviews TEXT,
-    star TEXT,
+    total_hotel_reviews INT,
+    star FLOAT,
     hotel_address TEXT,
-    price TEXT,
-    review_date TEXT,
-    reviewer_rating TEXT,
-    reviewer_contribution TEXT,
+    price INT,
+    review_date DATE,
+    reviewer_rating INT,
+    reviewer_contribution INT,
     reviewer_link TEXT,
     reviewer_title_comment TEXT,
     reviewer_comment TEXT,
-    reviewer_stay_date TEXT,
+    reviewer_stay_date DATE,
     reviewer_trip_type TEXT,
-    sentiment_score TEXT,
-    PRIMARY KEY (hotel_name)
+    sentiment_score FLOAT,
+    city TEXT,
+    country TEXT,
+    hotel_id TEXT,
+    inserted_date TIMESTAMP,
+    PRIMARY KEY (hotel_url, inserted_date, reviewer_link)
 );
