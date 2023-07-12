@@ -17,7 +17,7 @@ class GeturlSpider(scrapy.Spider):
     links = []
 
     def start_requests(self):
-        start_index = 28000  # Index to start from
+        start_index = 48000  # Index to start from
         counter = 0
         existing_urls = set()
         # with open('./test.csv', 'r') as existing_file:

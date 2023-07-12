@@ -1,14 +1,11 @@
 body {
-  /* display: flex; */
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  /* padding: 20px;
-  min-height: 100vh; */
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -29,8 +26,8 @@ body {
   height: auto;
   object-fit: cover;
   transition: filter 0.3s ease; /* Added transition for smooth effect */
-  filter: brightness(0.7); 
-  border-radius: 10px;
+  filter: brightness(0.7);
+  border-radius: 5px;
 }
 
 .city-name {
@@ -47,23 +44,99 @@ body {
   margin: 0;
 }
 
-/* .city-info.active {
-  filter:  brightness(1.1);
-} */
-
 .city-info:hover .city-image {
   filter: brightness(1); /* Set the hover brightness */
 }
+.navbar-custom {
+  background: linear-gradient(to right, #ff6b6b, #3a86ff, #3cf0c5);
+  height: auto;
+}
 
-/* .city-info.active .city-image {
-  filter: blur(5px) brightness(0.7); 
-} */
-
-/* 
-header {
-  background-color: #333;
+.navbar-custom .navbar-nav .nav-link {
   color: #fff;
-  padding: 20px;
+}
+
+.navbar-brand.travelmate-text {
+  color: #fff;
+}
+
+.navbar-home-icon {
+  width: 25%;
   text-align: center;
-  width: 100%; 
-} */
+  color: #fff;
+}
+
+.navbar-contact-link {
+  width: 25%;
+  text-align: center;
+}
+
+.navbar-home-icon svg {
+  width: 25px;
+  height: 25px;
+  /* margin-right: auto; */
+}
+
+.navbar-home-icon a,
+.navbar-contact-link a {
+  color: #fff;
+}
+
+.navbar-home-icon {
+  display: flex;
+  align-items: center;
+  width: 25%;
+  justify-content: flex-start;
+}
+
+.navbar-home-icon a {
+  margin-right: 5px;
+}
+
+.navbar-brand {
+  width: 50%;
+  text-align: center;
+}
+
+.navbar-contact-link {
+  width: 25%;
+  text-align: right;
+}
+
+.navbar-contact-link .nav-link {
+  color: #fff;
+}
+
+.search-box {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: #3989df;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
+
+.mt-24 {
+  margin-top: 6rem; /* Adjust the value as per your preference */
+}

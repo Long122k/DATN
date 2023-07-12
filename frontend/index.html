@@ -6,106 +6,128 @@
       rel="stylesheet"
       href="node_modules/bootstrap/dist/css/bootstrap.min.css"
     />
-
     <link rel="stylesheet" href="css/styles.css" />
+    
   </head>
 
   <body>
-    <header class="bg-dark text-white py-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-          <a href="#" class="mr-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              width="30"
-              height="30"
-            >
-              <path
-                fill="currentColor"
-                d="M12 2L1 12h3v8h6v-6h4v6h6v-8h3L12 2zm5 10h-2v6h-4v-6H9v6H5v-8l7-5 7 5v8z"
-              />
-            </svg>
-          </a>
-
-          <h1 class="mb-0">Travel Mate</h1>
-        </div>
-        <nav>
-          <span>Contact</span>
-        </nav>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+      <div class="navbar-home-icon">
+        <a href="index.html">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+            class="h-5 w-5"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </a>
+        <svg
+          class="h-full w-6 flex-shrink-0 text-gray-200"
+          viewBox="0 0 34 42"
+          preserveAspectRatio="none"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z"></path>
+        </svg>
+        <a class="nav-link font-bold" href="/countries">Countries</a>
       </div>
-    </header>
-
-    <div class="container py-4">
-      <div class="text-center mb-4">
-        <h2 class="display-4">Discover Your Perfect Holiday Destination</h2>
-        <p class="lead">
-          Explore our detailed guides for thousands of cities around the world.
-        </p>
+      <a class="navbar-brand travelmate-text mx-auto" href="index.html">TRAVELMATE</a>
+      <div class="navbar-contact-link">
+        <a class="nav-link" href="/contact">Contact</a>
       </div>
+    </nav>
 
-      <form id="search-form" onsubmit="return searchCity()" class="mb-4">
-        <div class="input-group">
-          <input
-            type="text"
-            placeholder="Enter a city name"
-            id="city-input"
-            required
-            class="form-control"
-          />
-          <button type="submit" class="btn btn-primary">Search</button>
+    <div
+      class="mt-24 sm:mt-32 md:mt-48 w-3/4 text-center pb-24 max-w-6xl mx-auto"
+    >
+      <div class="container py-4">
+        <div class="text-center mb-5">
+          <h2 class="display-5 font-weight-bold">
+            Find Your Perfect Destination
+          </h2>
+          <p class="lead">
+            Explore our detailed guides for thousands of cities around the
+            world.
+          </p>
         </div>
-      </form>
 
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p1.jpg" alt="Paris" />
-              <h3 class="city-name">Paris</h3>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p2.jpg" alt="New York City" />
-              <h3 class="city-name">New York City</h3>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p1.jpg" alt="Tokyo" />
-              <h3 class="city-name">Tokyo</h3>
-            </div>
+        <div class="container mb-5">
+          <div class="search-box">
+            <input
+              type="text"
+              class="search-input form-control"
+              placeholder="Search for a city or country"
+            />
+            <button type="submit" class="search-btn btn btn-primary" onclick="handleSearch()">
+              Search
+            </button>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p2.jpg" alt="London" />
-              <h3 class="city-name">London</h3>
-            </div>
-          </div>
+        <div class="text-center mb-5">
+          <h2 class="display-5 font-weight-bold">Featured Articles</h2>
+        </div>
 
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p1.jpg" alt="Berlin" />
-              <h3 class="city-name">Berlin</h3>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img class="city-image" src="images/p1.jpg" alt="Paris" />
+                <h3 class="city-name">Paris</h3>
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-6 col-lg-4">
-            <div class="city-info">
-              <img class="city-image" src="images/p2.jpg" alt="Sydney" />
-              <h3 class="city-name">Sydney</h3>
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img
+                  class="city-image"
+                  src="images/p2.jpg"
+                  alt="New York City"
+                />
+                <h3 class="city-name">New York City</h3>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img class="city-image" src="images/p1.jpg" alt="Tokyo" />
+                <h3 class="city-name">Tokyo</h3>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img class="city-image" src="images/p2.jpg" alt="London" />
+                <h3 class="city-name">London</h3>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img class="city-image" src="images/p1.jpg" alt="Berlin" />
+                <h3 class="city-name">Berlin</h3>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="city-info">
+                <img class="city-image" src="images/p2.jpg" alt="Sydney" />
+                <h3 class="city-name">Sydney</h3>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/main.js"></script>
   </body>

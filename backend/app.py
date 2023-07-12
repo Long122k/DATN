@@ -1,5 +1,6 @@
 import sys
 from flask import Flask
+from flask_cors import CORS
 from routes.city_route import search_route
 from routes.hotel_route import hotel_route
 from database.cassandra_connector import create_cassandra_session
@@ -8,6 +9,7 @@ from database.cassandra_connector import create_cassandra_session
 # from cassandra_connector import create_cassandra_session
 
 app = Flask(__name__)
+CORS(app)
 
 # Register the search API route
 app.register_blueprint(search_route)

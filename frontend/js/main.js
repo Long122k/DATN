@@ -1,80 +1,64 @@
-function searchCity() {
-    preventDefault();
-    const cityInput = document.getElementById("city_input");
-    const cityName = cityInput.value;
-  
-    // Example API request
-    // Replace this with your own API request to fetch city information based on the entered city name
-    fetchCityInformation(cityName)
-      .then(data => {
-        const cityInfoContainer = document.getElementById("city-info-container");
-        const cityImage = cityInfoContainer.querySelector(".city-image");
-        const cityTitle = cityInfoContainer.querySelector(".city-name");
-        const cityNameElement = document.getElementById("city-name");
-        const cityDescription = document.getElementById("city-description");
-  
-        // Update the city image, name, and description with the fetched data
-        cityImage.src = data.imageUrl;
-        cityImage.alt = data.cityName;
-        cityTitle.textContent = data.cityName;
-        cityNameElement.textContent = data.cityName;
-        cityDescription.textContent = data.description;
-  
-        // Redirect to intro.html
-        window.location.href = "intro.html";
-      })
-      .catch(error => {
-        console.log("Error fetching city information:", error);
-        // Reset the city image, name, and description in case of an error
-        const cityInfoContainer = document.getElementById("city-info-container");
-        const cityImage = cityInfoContainer.querySelector(".city-image");
-        const cityTitle = cityInfoContainer.querySelector(".city-name");
-        const cityNameElement = document.getElementById("city-name");
-        const cityDescription = document.getElementById("city-description");
-  
-        cityImage.src = "images/p1.jpg";
-        cityImage.alt = "City";
-        cityTitle.textContent = "City";
-        cityNameElement.textContent = "City";
-        cityDescription.textContent = "An error occurred while fetching city information. Please try again.";
-      });
-  
-    cityInput.value = ""; // Clear the search input
-  
-    return false;
-  }
-  
-  function fetchCityInformation(cityName) {
-    // Simulate a delay and return a promise with mock data
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (cityName.toLowerCase() === "paris") {
-          resolve({
-            cityName: "Paris",
-            imageUrl: "images/p1.jpg",
-            description: "Paris is the capital and most populous city of France, with an estimated population of 2,148,271 residents."
-          });
-        } else if (cityName.toLowerCase() === "new york city") {
-          resolve({
-            cityName: "New York City",
-            imageUrl: "images/p2.jpg",
-            description: "New York City is the most populous city in the United States, with an estimated population of 8,336,817 residents."
-          });
-        } else {
-          reject("City not found");
-        }
-      }, 1000); // Simulate a delay of 1 second for fetching data
+// Function to handle the search
+function handleSearch() {
+  // Get the value from the search input
+  const searchInput = document.querySelector(".search-input");
+  const searchTerm = searchInput.value;
+
+  // Call the API with the search term
+  fetchData(searchTerm)
+    .then((data) => {
+      // Process the returned data
+      displayResults(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  }
-  
+  // Store the search term in session storage
+  sessionStorage.setItem("searchTerm", searchTerm);
 
-// Get all city info elements
-const cityInfoElements = document.querySelectorAll('.city-info');
+  // Redirect to the new page without the search term in the URL
+  // window.location.href = "city_intro.html";
+}
 
-// Add click event listener to each city info element
-cityInfoElements.forEach(cityInfo => {
-  cityInfo.addEventListener('click', () => {
-    // Toggle the 'active' class on the clicked city info element
-    cityInfo.classList.toggle('active');
+// Function to fetch data from the API
+function fetchData(searchTerm) {
+  const url = `http://127.0.0.1:5000/api/search/${encodeURIComponent(
+    searchTerm
+  )}`;
+
+  return fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
   });
-});
+}
+
+// Function to display the search results
+function displayResults(data) {
+  // Extract the relevant data from the API response
+  const city = data.city_name;
+  const intro = data.intro;
+  const title = data.title;
+  const activities = data.activity;
+  const image = data.city_image;
+  const country = data.country_name;
+
+  // Display the results in the console
+  console.log("City:", city);
+  console.log("Intro:", intro);
+  console.log("Title:", title);
+  console.log("Activities:", activities);
+  console.log("Image:", image);
+  console.log("Country:", country);
+}
+
+// Check if the event listener is already attached to the search button
+const searchButton = document.querySelector(".search-btn");
+const clickEvent = new Event("click");
+const searchButtonHasEventListener = searchButton.dispatchEvent(clickEvent);
+
+// Attach the event listener only if it is not already attached
+if (!searchButtonHasEventListener) {
+  searchButton.addEventListener("click", handleSearch);
+}
