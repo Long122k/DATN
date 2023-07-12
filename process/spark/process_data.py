@@ -117,3 +117,6 @@ spark.stop()
 
 #  kafka-topics.sh --list --bootstrap-server kafka:9092 --list
 
+#cqlsh --user cassandra --password cassandra
+
+#kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning

@@ -1,0 +1,8 @@
+{
+  "name": "travel-mate",
+  "version": "1.0.0",
+  "description": "A travel website built with HTML, CSS, and JavaScript",
+  "dependencies": {
+    "bootstrap": "^4.6.0"
+  }
+}
